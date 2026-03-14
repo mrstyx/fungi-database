@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block title %}{{ action }} Entry — Fungi Database{% endblock %}
+
+{% block extra_styles %}
+  .card {
+    background: #fff;
+    border-radius: 6px;
+    padding: 2rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    max-width: 700px;
+  }
+
+  .card h2 {
+    font-size: 1.3rem;
+    color: #3a5a2b;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.1rem;
+  }
+
+  label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 0.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  label .required { color: #c0392b; margin-left: 2px; }
+
+  input[type="text"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    background: #fafaf8;
+    transition: border-color 0.2s;
+  }
+
+  input[type="text"]:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: #3a5a2b;
+    background: #fff;
+  }
+
+  textarea { resize: vertical; min-height: 80px; }
+
+  .form-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .btn-submit {
+    background: #3a5a2b;
+    color: #fff;
+    padding: 0.55rem 1.4rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: filter 0.15s;
+  }
+
+  .btn-submit:hover { filter: brightness(0.9); }
+
+  .btn-cancel {
+    background: transparent;
+    color: #555;
+    padding: 0.55rem 1.2rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.15s;
+  }
+
+  .btn-cancel:hover { background: #f0ece4; }
+{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h2>{{ action }} Fungi Entry</h2>
+    <form method="post">
+      <div class="form-group">
+        <label for="scientific_name">Scientific Name <span class="required">*</span></label>
+        <input type="text" id="scientific_name" name="scientific_name"
+               value="{{ entry.scientific_name or '' }}" required
+               placeholder="e.g. Amanita muscaria">
+      </div>
+
+      <div class="form-group">
+        <label for="common_name">Common Name</label>
+        <input type="text" id="common_name" name="common_name"
+               value="{{ entry.common_name or '' }}"
+               placeholder="e.g. Fly Agaric">
+      </div>
+
+      <div class="form-group">
+        <label for="family">Family</label>
+        <input type="text" id="family" name="family"
+               value="{{ entry.family or '' }}"
+               placeholder="e.g. Amanitaceae">
+      </div>
+
+      <div class="form-group">
+        <label for="edibility">Edibility</label>
+        <select id="edibility" name="edibility">
+          {% for opt in ['unknown', 'edible', 'inedible', 'poisonous'] %}
+            <option value="{{ opt }}"
+              {% if (entry.edibility or 'unknown') == opt %}selected{% endif %}>
+              {{ opt | capitalize }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="habitat">Habitat</label>
+        <textarea id="habitat" name="habitat"
+                  placeholder="e.g. Deciduous and coniferous forests, often near birch or pine">{{ entry.habitat or '' }}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description"
+                  placeholder="Physical description, identifying features…">{{ entry.description or '' }}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="notes">Notes</label>
+        <textarea id="notes" name="notes"
+                  placeholder="Additional notes, references, observations…">{{ entry.notes or '' }}</textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-submit">{{ action }} Entry</button>
+        <a href="{{ url_for('index') }}" class="btn-cancel">Cancel</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}{{ entry.scientific_name }} — Fungi Database{% endblock %}
+
+{% block extra_styles %}
+  .card {
+    background: #fff;
+    border-radius: 6px;
+    padding: 2rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    max-width: 700px;
+  }
+
+  .card h2 {
+    font-size: 1.5rem;
+    color: #3a5a2b;
+    margin-bottom: 0.25rem;
+  }
+
+  .common-name {
+    font-size: 1rem;
+    color: #888;
+    margin-bottom: 1.5rem;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 0.2rem 0.55rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    vertical-align: middle;
+  }
+
+  .badge-edible    { background: #d4edda; color: #155724; }
+  .badge-poisonous { background: #f8d7da; color: #721c24; }
+  .badge-inedible  { background: #fff3cd; color: #856404; }
+  .badge-unknown   { background: #e2e3e5; color: #383d41; }
+
+  .fields { display: grid; gap: 1rem; }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 0.5rem;
+    border-bottom: 1px solid #f0ece4;
+    padding-bottom: 0.75rem;
+  }
+
+  .field-row:last-child { border-bottom: none; }
+
+  .field-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #888;
+    padding-top: 0.1rem;
+  }
+
+  .field-value { font-size: 0.95rem; white-space: pre-wrap; }
+
+  .actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.45rem 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: filter 0.15s;
+  }
+
+  .btn:hover { filter: brightness(0.9); }
+  .btn-edit   { background: #5a7a48; color: #fff; }
+  .btn-delete { background: #c0392b; color: #fff; }
+  .btn-back   { background: transparent; color: #555; border: 1px solid #ccc; }
+  .btn-back:hover { background: #f0ece4; filter: none; }
+{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h2><em>{{ entry.scientific_name }}</em></h2>
+    {% if entry.common_name %}
+      <p class="common-name">{{ entry.common_name }}</p>
+    {% endif %}
+
+    <div class="fields">
+      <div class="field-row">
+        <span class="field-label">Family</span>
+        <span class="field-value">{{ entry.family or '—' }}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-label">Edibility</span>
+        <span class="field-value">
+          <span class="badge badge-{{ entry.edibility }}">{{ entry.edibility }}</span>
+        </span>
+      </div>
+      <div class="field-row">
+        <span class="field-label">Habitat</span>
+        <span class="field-value">{{ entry.habitat or '—' }}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-label">Description</span>
+        <span class="field-value">{{ entry.description or '—' }}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-label">Notes</span>
+        <span class="field-value">{{ entry.notes or '—' }}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-label">Date Added</span>
+        <span class="field-value">
+          {{ entry.date_added.strftime('%Y-%m-%d %H:%M') if entry.date_added else '—' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <a href="{{ url_for('edit', entry_id=entry.id) }}" class="btn btn-edit">Edit</a>
+      <form method="post" action="{{ url_for('delete', entry_id=entry.id) }}"
+            onsubmit="return confirm('Delete {{ entry.scientific_name }}?')">
+        <button type="submit" class="btn btn-delete">Delete</button>
+      </form>
+      <a href="{{ url_for('index') }}" class="btn btn-back">← Back</a>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}Fungi Database — All Entries{% endblock %}
+
+{% block extra_styles %}
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+
+  th, td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e8e3da;
+  }
+
+  th {
+    background: #3a5a2b;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f9f7f3; }
+
+  .badge {
+    display: inline-block;
+    padding: 0.2rem 0.55rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+
+  .badge-edible    { background: #d4edda; color: #155724; }
+  .badge-poisonous { background: #f8d7da; color: #721c24; }
+  .badge-inedible  { background: #fff3cd; color: #856404; }
+  .badge-unknown   { background: #e2e3e5; color: #383d41; }
+
+  .actions { display: flex; gap: 0.4rem; }
+
+  .btn {
+    display: inline-block;
+    padding: 0.3rem 0.7rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: filter 0.15s;
+  }
+
+  .btn:hover { filter: brightness(0.9); }
+  .btn-view   { background: #3a5a2b; color: #fff; }
+  .btn-edit   { background: #5a7a48; color: #fff; }
+  .btn-delete { background: #c0392b; color: #fff; }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #888;
+  }
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1.25rem;
+  }
+
+  .page-header h2 { font-size: 1.3rem; color: #3a5a2b; }
+  .count { font-size: 0.85rem; color: #888; }
+{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <h2>All Fungi Entries</h2>
+    <span class="count">{{ fungi_list | length }} record{% if fungi_list | length != 1 %}s{% endif %}</span>
+  </div>
+
+  {% if fungi_list %}
+    <table>
+      <thead>
+        <tr>
+          <th>Scientific Name</th>
+          <th>Common Name</th>
+          <th>Family</th>
+          <th>Edibility</th>
+          <th>Date Added</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for f in fungi_list %}
+          <tr>
+            <td><em>{{ f.scientific_name }}</em></td>
+            <td>{{ f.common_name or '—' }}</td>
+            <td>{{ f.family or '—' }}</td>
+            <td>
+              <span class="badge badge-{{ f.edibility }}">{{ f.edibility }}</span>
+            </td>
+            <td>{{ f.date_added.strftime('%Y-%m-%d') if f.date_added else '—' }}</td>
+            <td>
+              <div class="actions">
+                <a href="{{ url_for('view_entry', entry_id=f.id) }}" class="btn btn-view">View</a>
+                <a href="{{ url_for('edit', entry_id=f.id) }}" class="btn btn-edit">Edit</a>
+                <form method="post" action="{{ url_for('delete', entry_id=f.id) }}"
+                      onsubmit="return confirm('Delete {{ f.scientific_name }}?')">
+                  <button type="submit" class="btn btn-delete">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="empty-state">
+      <p style="font-size:3rem;">🍄</p>
+      <p style="margin-top:0.5rem;">No entries yet. <a href="{{ url_for('add') }}">Add the first one!</a></p>
+    </div>
+  {% endif %}
+{% endblock %}
