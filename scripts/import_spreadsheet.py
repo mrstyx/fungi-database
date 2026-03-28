@@ -1,18 +1,29 @@
 """
 import_spreadsheet.py
 =====================
-Imports data from an Excel or CSV spreadsheet into the fungi SQLite database.
+Imports data from an Excel or CSV spreadsheet into the fungi MariaDB database.
+
+The script connects to the same MariaDB instance used by the Flask web app.
+Ensure MariaDB is running (e.g. via ``docker compose up -d``) before importing.
+
+Connection is configured via environment variables:
+
+    DB_HOST      MariaDB host         (default: localhost)
+    DB_PORT      MariaDB port         (default: 3306)
+    DB_USER      MariaDB user         (default: fungi)
+    DB_PASSWORD  MariaDB password     (default: empty string)
+    DB_NAME      MariaDB database     (default: fungi_db)
 
 Usage examples:
-    # Basic import – table name inferred from file name
-    python scripts/import_spreadsheet.py data/raw/species.xlsx
+    # Basic import into the fungi table
+    python scripts/import_spreadsheet.py data/raw/fungi.xlsx
 
-    # Specify target table and sheet
+    # Specify a sheet name
     python scripts/import_spreadsheet.py data/raw/mydata.xlsx \\
-        --table-name species --sheet-name Sheet1
+        --sheet-name Sheet1
 
     # Preview data without writing to the database
-    python scripts/import_spreadsheet.py data/raw/species.csv --dry-run
+    python scripts/import_spreadsheet.py data/raw/fungi.csv --dry-run
 
 Supported file formats: .xlsx, .xls, .csv
 """
@@ -20,6 +31,7 @@ Supported file formats: .xlsx, .xls, .csv
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -30,27 +42,39 @@ import sqlalchemy
 # Paths
 # ---------------------------------------------------------------------------
 REPO_ROOT = Path(__file__).parent.parent
-DB_PATH = REPO_ROOT / "data" / "database" / "fungi.db"
 
-# Required columns for each known table (empty set means no enforcement)
-REQUIRED_COLUMNS: dict[str, list[str]] = {
-    "species": ["scientific_name"],
-    "observations": ["species_id"],
-    "locations": [],
-    "characteristics": ["species_id"],
-}
+# ---------------------------------------------------------------------------
+# MariaDB connection settings (mirrors app.py)
+# ---------------------------------------------------------------------------
+DB_HOST = os.environ.get("DB_HOST", "localhost")
+DB_PORT = int(os.environ.get("DB_PORT", 3306))
+DB_USER = os.environ.get("DB_USER", "fungi")
+DB_PASSWORD = os.environ.get("DB_PASSWORD", "")
+DB_NAME = os.environ.get("DB_NAME", "fungi_db")
+
+# Target table and required / optional columns (matches the fungi table in app.py)
+TARGET_TABLE = "fungi"
+REQUIRED_COLUMNS: list[str] = ["scientific_name"]
+OPTIONAL_COLUMNS: list[str] = [
+    "common_name",
+    "family",
+    "habitat",
+    "edibility",
+    "description",
+    "notes",
+]
 
 
 def parse_args() -> argparse.Namespace:
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(
-        description="Import spreadsheet data into the fungi SQLite database.",
+        description="Import spreadsheet data into the fungi MariaDB database.",
         epilog=(
             "Examples:\n"
-            "  python scripts/import_spreadsheet.py data/raw/species.xlsx\n"
-            "  python scripts/import_spreadsheet.py data/raw/obs.csv "
-            "--table-name observations\n"
-            "  python scripts/import_spreadsheet.py data/raw/species.xlsx --dry-run"
+            "  python scripts/import_spreadsheet.py data/raw/fungi.xlsx\n"
+            "  python scripts/import_spreadsheet.py data/raw/fungi.csv --dry-run\n"
+            "  python scripts/import_spreadsheet.py data/raw/mydata.xlsx "
+            "--sheet-name Sheet1"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -66,10 +90,9 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--table-name",
-        default=None,
+        default=TARGET_TABLE,
         help=(
-            "Target database table name. "
-            "Defaults to the file stem (e.g. 'species' from 'species.xlsx')."
+            f"Target database table name (default: '{TARGET_TABLE}')."
         ),
     )
     parser.add_argument(
@@ -94,33 +117,37 @@ def read_spreadsheet(file_path: Path, sheet_name) -> pd.DataFrame:
     return df
 
 
-def validate_columns(df: pd.DataFrame, table_name: str) -> None:
+def validate_columns(df: pd.DataFrame) -> None:
     """Check that required columns are present in the DataFrame."""
-    required = REQUIRED_COLUMNS.get(table_name, [])
-    missing = [col for col in required if col not in df.columns]
+    missing = [col for col in REQUIRED_COLUMNS if col not in df.columns]
     if missing:
         raise ValueError(
-            f"Required column(s) missing for table '{table_name}': "
+            "Required column(s) missing from spreadsheet: "
             + ", ".join(missing)
         )
 
 
 def import_data(df: pd.DataFrame, table_name: str) -> None:
-    """Write the DataFrame to the SQLite database table."""
-    if not DB_PATH.exists():
-        raise FileNotFoundError(
-            f"Database not found at {DB_PATH}. "
-            "Run 'python scripts/create_database.py' first."
-        )
-
-    engine = sqlalchemy.create_engine(f"sqlite:///{DB_PATH}")
-    with engine.begin() as conn:
-        df.to_sql(
-            table_name,
-            con=conn,
-            if_exists="append",  # append rows; never overwrite the table
-            index=False,
-        )
+    """Write the DataFrame to the MariaDB database table."""
+    connection_url = (
+        f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    )
+    try:
+        engine = sqlalchemy.create_engine(connection_url)
+        with engine.begin() as conn:
+            df.to_sql(
+                table_name,
+                con=conn,
+                if_exists="append",  # append rows; never overwrite the table
+                index=False,
+            )
+    except Exception as exc:
+        raise ConnectionError(
+            f"Could not connect to MariaDB at {DB_HOST}:{DB_PORT}/{DB_NAME}. "
+            "Ensure MariaDB is running (e.g. 'docker compose up -d') and "
+            "that the DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, and DB_NAME "
+            f"environment variables are set correctly.\nDetail: {exc}"
+        ) from exc
     print(f"Successfully imported {len(df)} rows into '{table_name}'.")
 
 
@@ -136,10 +163,10 @@ def main() -> None:
         print(f"Error: File not found: {file_path}")
         sys.exit(1)
 
-    # Determine target table name
-    table_name: str = args.table_name or file_path.stem.lower().replace("-", "_")
+    table_name: str = args.table_name
     print(f"Source file : {file_path}")
     print(f"Target table: {table_name}")
+    print(f"Database    : {DB_HOST}:{DB_PORT}/{DB_NAME}")
 
     # Read the spreadsheet
     try:
@@ -156,7 +183,7 @@ def main() -> None:
 
     # Validate required columns
     try:
-        validate_columns(df, table_name)
+        validate_columns(df)
     except ValueError as exc:
         print(f"Validation error: {exc}")
         sys.exit(1)
