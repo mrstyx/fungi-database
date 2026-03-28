@@ -91,55 +91,58 @@ Mycology repository of all things fungi — a database system for managing fungi
 ## Spreadsheet-to-Database Import
 
 If you have existing fungi data in Excel or CSV spreadsheets, you can import
-them directly into a lightweight SQLite database.
+them directly into the MariaDB database used by the web app.
 
-### Set up the SQLite database
+> **Note:** MariaDB must be running before you import. Start all services with
+> `docker compose up -d` first, or configure the `DB_*` environment variables
+> to point at a running MariaDB instance.
+
+### Install import dependencies
 
 ```bash
-# Install the import dependencies
 pip install -r scripts/requirements.txt
-
-# Create the database and all tables
-python scripts/create_database.py
 ```
-
-The database is created at `data/database/fungi.db`.
 
 ### Import a spreadsheet
 
 ```bash
 # Place your file in data/raw/ then run:
-python scripts/import_spreadsheet.py data/raw/species.xlsx
+python scripts/import_spreadsheet.py data/raw/fungi.xlsx
 
-# Specify a sheet name and target table explicitly
-python scripts/import_spreadsheet.py data/raw/mydata.xlsx \
-    --sheet-name Sheet1 --table-name species
+# Specify a sheet name
+python scripts/import_spreadsheet.py data/raw/mydata.xlsx --sheet-name Sheet1
 
 # Preview without writing to the database
-python scripts/import_spreadsheet.py data/raw/species.csv --dry-run
+python scripts/import_spreadsheet.py data/raw/fungi.csv --dry-run
 ```
 
 Run `python scripts/import_spreadsheet.py --help` for full usage details.
 
-### Database schema overview
+The script connects to MariaDB using the same environment variables as the web
+app (`DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`).
 
-| Table            | Description                                             |
-|------------------|---------------------------------------------------------|
-| species          | Taxonomic and descriptive data for each fungal species  |
-| locations        | Geographic and habitat information for observation sites |
-| observations     | Individual sighting records linking species and locations |
-| characteristics  | Morphological traits (cap, gills, stem, spores, etc.)   |
+### Target table
 
-See [`schema/schema.sql`](schema/schema.sql) for the full schema and
+All imports go into the `fungi` table, which has the following columns:
+
+| Column          | Required | Description                                             |
+|-----------------|----------|---------------------------------------------------------|
+| scientific_name | ✅ Yes   | Full binomial Latin name                                |
+| common_name     | No       | Vernacular name(s)                                      |
+| family          | No       | Taxonomic family                                        |
+| habitat         | No       | Habitat description                                     |
+| edibility       | No       | One of: `edible`, `poisonous`, `inedible`, `unknown`    |
+| description     | No       | Free-text species description                           |
+| notes           | No       | Additional notes                                        |
+
+See [`schema/schema.sql`](schema/schema.sql) for the full MariaDB schema and
 [`docs/data_dictionary.md`](docs/data_dictionary.md) for detailed field
-descriptions, data formats, and controlled vocabularies.
+descriptions.
 
 ### Data privacy
 
 Precise GPS coordinates for sensitive or protected sites should not be
-committed to a public repository. Use regional-level data, or add
-`data/database/` to `.gitignore` if your database contains sensitive
-location records.
+committed to a public repository. Use regional-level data only.
 
 ## Contributing
 
@@ -151,10 +154,10 @@ location records.
 
 ## Future Enhancements
 
-- Web interface for querying and browsing the SQLite database
 - Automated data-cleaning pipeline for common spreadsheet inconsistencies
 - Export to Darwin Core / CSV for sharing with iNaturalist or GBIF
 - Photo gallery linked to observation records
+- Advanced search and filtering in the web interface
 
 ## Project Structure
 
@@ -168,14 +171,13 @@ fungi-database/
 │   └── detail.html               # Single entry view
 ├── data/
 │   ├── raw/                      # Original spreadsheet files
-│   ├── processed/                # Cleaned CSV files
-│   └── database/                 # SQLite database file
+│   └── processed/                # Cleaned CSV files
 ├── scripts/
-│   ├── create_database.py        # Creates the SQLite database
-│   ├── import_spreadsheet.py     # Imports spreadsheet data
+│   ├── import_spreadsheet.py     # Imports spreadsheet data into MariaDB
+│   ├── create_database.py        # Deprecated – schema managed by app.py
 │   └── requirements.txt          # Python dependencies for scripts
 ├── schema/
-│   └── schema.sql                # SQLite database schema
+│   └── schema.sql                # MariaDB database schema
 ├── docs/
 │   └── data_dictionary.md        # Field definitions and guidelines
 ├── Dockerfile
