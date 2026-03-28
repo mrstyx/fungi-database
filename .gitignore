@@ -39,6 +39,16 @@ env/
 .DS_Store
 Thumbs.db
 
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
 # Docker volumes
 mariadb_data/
-*.pyc\n__pycache__/
+
+# SQLite database files (comment out if you want to track fungi.db)
+data/database/*.db
+
+# Large raw data files (uncomment if spreadsheets are too large for git)
+# data/raw/*.xlsx
+# data/raw/*.xls
+# data/raw/*.csv
