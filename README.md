@@ -1,5 +1,5 @@
 # fungi-database
-Mycology repository of all things fungi — a simple MariaDB-backed web application for recording and browsing fungal species.
+Mycology repository of all things fungi — a database system for managing fungi species data converted from spreadsheets, plus a MariaDB-backed web application for recording and browsing fungal species.
 
 ## Features
 
@@ -88,18 +88,98 @@ Mycology repository of all things fungi — a simple MariaDB-backed web applicat
 
 5. **Open** `http://localhost:5000`
 
+## Spreadsheet-to-Database Import
+
+If you have existing fungi data in Excel or CSV spreadsheets, you can import
+them directly into a lightweight SQLite database.
+
+### Set up the SQLite database
+
+```bash
+# Install the import dependencies
+pip install -r scripts/requirements.txt
+
+# Create the database and all tables
+python scripts/create_database.py
+```
+
+The database is created at `data/database/fungi.db`.
+
+### Import a spreadsheet
+
+```bash
+# Place your file in data/raw/ then run:
+python scripts/import_spreadsheet.py data/raw/species.xlsx
+
+# Specify a sheet name and target table explicitly
+python scripts/import_spreadsheet.py data/raw/mydata.xlsx \
+    --sheet-name Sheet1 --table-name species
+
+# Preview without writing to the database
+python scripts/import_spreadsheet.py data/raw/species.csv --dry-run
+```
+
+Run `python scripts/import_spreadsheet.py --help` for full usage details.
+
+### Database schema overview
+
+| Table            | Description                                             |
+|------------------|---------------------------------------------------------|
+| species          | Taxonomic and descriptive data for each fungal species  |
+| locations        | Geographic and habitat information for observation sites |
+| observations     | Individual sighting records linking species and locations |
+| characteristics  | Morphological traits (cap, gills, stem, spores, etc.)   |
+
+See [`schema/schema.sql`](schema/schema.sql) for the full schema and
+[`docs/data_dictionary.md`](docs/data_dictionary.md) for detailed field
+descriptions, data formats, and controlled vocabularies.
+
+### Data privacy
+
+Precise GPS coordinates for sensitive or protected sites should not be
+committed to a public repository. Use regional-level data, or add
+`data/database/` to `.gitignore` if your database contains sensitive
+location records.
+
+## Contributing
+
+1. Fork the repository and create a feature branch.
+2. Keep raw spreadsheet files in `data/raw/` (they are git-ignored by default
+   if large).
+3. Follow [PEP 8](https://peps.python.org/pep-0008/) for Python code.
+4. Open a pull request describing your changes.
+
+## Future Enhancements
+
+- Web interface for querying and browsing the SQLite database
+- Automated data-cleaning pipeline for common spreadsheet inconsistencies
+- Export to Darwin Core / CSV for sharing with iNaturalist or GBIF
+- Photo gallery linked to observation records
+
 ## Project Structure
 
 ```
 fungi-database/
-├── app.py                # Flask application
+├── app.py                        # Flask web application (MariaDB)
 ├── templates/
-│   ├── base.html         # Shared layout
-│   ├── index.html        # Entry listing
-│   ├── form.html         # Add / edit form
-│   └── detail.html       # Single entry view
+│   ├── base.html                 # Shared layout
+│   ├── index.html                # Entry listing
+│   ├── form.html                 # Add / edit form
+│   └── detail.html               # Single entry view
+├── data/
+│   ├── raw/                      # Original spreadsheet files
+│   ├── processed/                # Cleaned CSV files
+│   └── database/                 # SQLite database file
+├── scripts/
+│   ├── create_database.py        # Creates the SQLite database
+│   ├── import_spreadsheet.py     # Imports spreadsheet data
+│   └── requirements.txt          # Python dependencies for scripts
+├── schema/
+│   └── schema.sql                # SQLite database schema
+├── docs/
+│   └── data_dictionary.md        # Field definitions and guidelines
 ├── Dockerfile
 ├── docker-compose.yml
-├── requirements.txt
+├── requirements.txt              # Flask app dependencies
 └── .env.example
 ```
