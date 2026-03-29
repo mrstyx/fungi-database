@@ -1,0 +1,19 @@
+2026-03-29 10:58:16  INFO      Input file : /home/runner/work/fungi-database/fungi-database/data/processed/myco_cleaned.csv
+2026-03-29 10:58:16  INFO      Loaded 237 records from myco_cleaned.csv
+2026-03-29 10:58:16  INFO      PREVIEW MODE – no data will be written to the database.
+2026-03-29 10:58:16  INFO      Total records ready for import: 237
+2026-03-29 10:58:16  INFO      
+2026-03-29 10:58:16  INFO      First 10 records:
+2026-03-29 10:58:16  INFO        [  1] scientific_name='Agaricus bisporus'  common_name='Organic Dried Champignon Mushrooms'  family='Agaricus'  edibility='unknown'
+2026-03-29 10:58:16  INFO        [  2] scientific_name='Agaricus sp.'  common_name='Mushroom'  family='Agaricus'  edibility='unknown'
+2026-03-29 10:58:16  INFO        [  3] scientific_name='Wolfiporia sp.'  common_name='Indian Bread'  family='Wolfiporia'  edibility='unknown'
+2026-03-29 10:58:16  INFO        [  4] scientific_name='Ganoderma sp.'  common_name='Organic Reishi Fruiting Body and Mycelia'  family='Ganoderma'  edibility='unknown'
+2026-03-29 10:58:16  INFO        [  5] scientific_name='Trametes sp.'  common_name='Turkey Tail'  family='Trametes'  edibility='unknown'
+2026-03-29 10:58:16  INFO        [  6] scientific_name='Cordyceps sp.'  common_name='Cordyceps'  family='Cordyceps'  edibility='unknown'
+2026-03-29 10:58:16  INFO        [  7] scientific_name='Agaricus bisporus'  common_name='Portobello'  family='Agaricus'  edibility='unknown'
+2026-03-29 10:58:16  INFO        [  8] scientific_name='Inonotus sp.'  common_name='Chaga'  family='Inonotus'  edibility='unknown'
+2026-03-29 10:58:16  INFO        [  9] scientific_name='Tuber sp.'  common_name='Dried Truffle, Truffle'  family='Tuber'  edibility='unknown'
+2026-03-29 10:58:16  INFO        [ 10] scientific_name='Suillus sp.'  common_name='Slippery Jack Mushrooms'  family='Suillus'  edibility='unknown'
+2026-03-29 10:58:16  INFO      
+2026-03-29 10:58:16  INFO      Run with --execute to perform the actual import.
+2026-03-29 10:58:16  INFO      Log written to /home/runner/work/fungi-database/fungi-database/data/processed/import_log.txt

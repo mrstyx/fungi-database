@@ -1,0 +1,340 @@
+FUNGI DATABASE – mycoCSV.csv DATA QUALITY REPORT
+Generated from: /home/runner/work/fungi-database/fungi-database/data/raw/mycoCSV.csv
+
+========================================================================
+ 1. OVERVIEW
+========================================================================
+Total records : 238
+Total columns : 28
+Column names  : ['Month', 'Plate', 'Strip Number', 'Tube Number', 'Sample Location', 'iNaturalist Number', 'Validated By', 'Seq. Status', 'URL', 'Submitted By', 'Identification', 'Identification Per FDA Label', 'Binomial', 'Name of Product', 'Brand', 'First Pass ID', 'Manufacturer/Distributor', 'Country of Origin', '1-tier administrative district', 'Barcode', 'Lot/Batch', 'Preservation Method', 'Product Type', 'Fungal Only/Mostly', 'Multiple species?', 'Homogenized?', 'Comments', 'GenBank#']
+
+Overall data completeness : 79.8%
+  (5318 / 6664 cells filled)
+========================================================================
+ 2. COLUMN-BY-COLUMN ANALYSIS
+========================================================================
+
+--- Month ---
+  Filled      : 238 / 238  (100.0%)
+  Null/Unknown: 0
+  Unique vals : 1
+  Top values  :
+      238x  '03'
+
+--- Plate ---
+  Filled      : 238 / 238  (100.0%)
+  Null/Unknown: 0
+  Unique vals : 4
+  Top values  :
+       96x  '2'
+       95x  '1'
+       38x  '3'
+        9x  'C'
+
+--- Strip Number ---
+  Filled      : 238 / 238  (100.0%)
+  Null/Unknown: 0
+  Unique vals : 31
+  Top values  :
+        8x  '23'
+        8x  '11'
+        8x  '13'
+        8x  '16'
+        8x  '27'
+
+--- Tube Number ---
+  Filled      : 238 / 238  (100.0%)
+  Null/Unknown: 0
+  Unique vals : 8
+  Top values  :
+       30x  '2'
+       30x  '1'
+       30x  '6'
+       30x  '3'
+       30x  '4'
+
+--- Sample Location ---
+  Filled      : 238 / 238  (100.0%)
+  Null/Unknown: 0
+  Unique vals : 238
+  Top values  :
+        1x  '2024_23_8'
+        1x  '2024_11_2'
+        1x  '2024_11_1'
+        1x  '2024_13_2'
+        1x  '2024_16_2'
+
+--- iNaturalist Number ---
+  Filled      : 238 / 238  (100.0%)
+  Null/Unknown: 0
+  Unique vals : 238
+  Top values  :
+        1x  '202232219'
+        1x  '200470717'
+        1x  '200481591'
+        1x  '201931864'
+        1x  '201933645'
+
+--- Validated By ---
+  Filled      : 231 / 238  (97.1%)
+  Null/Unknown: 7
+  Unique vals : 10
+  Top values  :
+       69x  'Kevin'
+       50x  'Garrett'
+       42x  'John Plischke'
+       33x  'Jessica'
+       13x  'Kurt'
+
+--- Seq. Status ---
+  Filled      : 238 / 238  (100.0%)
+  Null/Unknown: 0
+  Unique vals : 2
+  Top values  :
+      163x  'Failed'
+       75x  'Successful'
+
+--- URL ---
+  Filled      : 238 / 238  (100.0%)
+  Null/Unknown: 0
+  Unique vals : 238
+  Top values  :
+        1x  'https://www.inaturalist.org/observations/202232219'
+        1x  'https://www.inaturalist.org/observations/200470717'
+        1x  'https://www.inaturalist.org/observations/200481591'
+        1x  'https://www.inaturalist.org/observations/201931864'
+        1x  'https://www.inaturalist.org/observations/201933645'
+
+--- Submitted By ---
+  Filled      : 238 / 238  (100.0%)
+  Null/Unknown: 0
+  Unique vals : 16
+  Top values  :
+       44x  'Birkebak'
+       29x  'hills47448'
+       25x  'verpahh'
+       25x  'lothlin'
+       20x  'johnplischke'
+
+--- Identification ---
+  Filled      : 82 / 238  (34.5%)
+  Null/Unknown: 156
+  Unique vals : 40
+  Top values  :
+        8x  'Boletus bainiugan'
+        6x  'Lentinula edodes'
+        5x  'Hypsizygus'
+        5x  'Pleurotus ostreatus'
+        4x  'Auricularia heimuer'
+
+--- Identification Per FDA Label ---
+  Filled      : 228 / 238  (95.8%)
+  Null/Unknown: 10
+  Unique vals : 142
+  Top values  :
+       14x  'Porchini Mushrooms'
+       10x  'Porcini'
+        9x  'Black Fungus'
+        6x  'Chanterelle'
+        5x  'Boletus edulis'
+
+--- Binomial ---
+  Filled      : 57 / 238  (23.9%)
+  Null/Unknown: 181
+  Unique vals : 34
+  Top values  :
+        7x  'Boletus edulis'
+        4x  'Ganoderma lucidum'
+        3x  'Agrocybe aegerita'
+        3x  'Tuber magnatum'
+        3x  'Tuber aestivum'
+
+--- Name of Product ---
+  Filled      : 232 / 238  (97.5%)
+  Null/Unknown: 6
+  Unique vals : 133
+  Top values  :
+       15x  'Mushroom Medley'
+       11x  'Porchini Mushrooms'
+        9x  'Chef Blend'
+        8x  'Dried Porchini Mushrooms'
+        8x  'Mixed Edible Fungus for Stewing Soup'
+
+--- Brand ---
+  Filled      : 194 / 238  (81.5%)
+  Null/Unknown: 44
+  Unique vals : 78
+  Top values  :
+       15x  "Melissa's"
+       13x  'Shrooms'
+       11x  'World Foods Market'
+        9x  'Ha Vista'
+        8x  'FungusAmongUs'
+
+--- First Pass ID ---
+  Filled      : 237 / 238  (99.6%)
+  Null/Unknown: 1
+  Unique vals : 46
+  Top values  :
+       48x  'Bolete'
+       22x  'Pleurotus'
+       22x  'Auricularia'
+        9x  'Cantharellus'
+        9x  'Hypsizygus'
+
+--- Manufacturer/Distributor ---
+  Filled      : 208 / 238  (87.4%)
+  Null/Unknown: 30
+  Unique vals : 86
+  Top values  :
+       15x  'World Variety Produce, Inc.'
+       13x  'Northern Food I/E Inc.'
+       12x  'SLR Food Distribution, Inc., USA'
+       11x  'World Foods Market'
+       11x  'Psychedlic Foods, LLC'
+
+--- Country of Origin ---
+  Filled      : 172 / 238  (72.3%)
+  Null/Unknown: 66
+  Unique vals : 21
+  Top values  :
+       67x  'China'
+       26x  'USA'
+       14x  'Multiple Given'
+       14x  'France'
+       11x  'Italy'
+
+--- 1-tier administrative district ---
+  Filled      : 8 / 238  (3.4%)
+  Null/Unknown: 230
+  Unique vals : 4
+  Top values  :
+        4x  'California'
+        2x  'Oregon'
+        1x  'Colorado'
+        1x  'Alaska'
+
+--- Barcode ---
+  Filled      : 186 / 238  (78.2%)
+  Null/Unknown: 52
+  Unique vals : 117
+  Top values  :
+       11x  '0200000203993'
+        9x  '819981012601'
+        8x  '754351198212'
+        7x  '045255152098'
+        7x  '045255116762'
+
+--- Lot/Batch ---
+  Filled      : 58 / 238  (24.4%)
+  Null/Unknown: 180
+  Unique vals : 35
+  Top values  :
+        6x  'NA'
+        6x  'RS23077'
+        4x  'B3Y20L10'
+        3x  '359/23'
+        3x  'L.M032'
+
+--- Preservation Method ---
+  Filled      : 238 / 238  (100.0%)
+  Null/Unknown: 0
+  Unique vals : 3
+  Top values  :
+      179x  'Dried'
+       30x  'Fresh'
+       29x  'Canned/Pickled/Brined'
+
+--- Product Type ---
+  Filled      : 238 / 238  (100.0%)
+  Null/Unknown: 0
+  Unique vals : 2
+  Top values  :
+      216x  'Food'
+       22x  'Medicinal/Tea'
+
+--- Fungal Only/Mostly ---
+  Filled      : 238 / 238  (100.0%)
+  Null/Unknown: 0
+  Unique vals : 2
+  Top values  :
+      224x  'Y'
+       14x  'N'
+
+--- Multiple species? ---
+  Filled      : 238 / 238  (100.0%)
+  Null/Unknown: 0
+  Unique vals : 2
+  Top values  :
+      178x  'N'
+       60x  'Y'
+
+--- Homogenized? ---
+  Filled      : 238 / 238  (100.0%)
+  Null/Unknown: 0
+  Unique vals : 2
+  Top values  :
+      215x  'N'
+       23x  'Y'
+
+--- Comments ---
+  Filled      : 21 / 238  (8.8%)
+  Null/Unknown: 217
+  Unique vals : 9
+  Top values  :
+        8x  'China, Serbia, South America, and USA'
+        4x  'China, Bulgaria, Montenagro, Serbia, Russia, Hungary, Macedonia, Chile, Peru'
+        3x  'I think?'
+        1x  'Duplicate of 202132309?'
+        1x  'Compressed into little bricks. Also "Northeast"'
+
+--- GenBank# ---
+  Filled      : 72 / 238  (30.3%)
+  Null/Unknown: 166
+  Unique vals : 72
+  Top values  :
+        1x  'PV501041'
+        1x  'PV501057'
+        1x  'PV501019'
+        1x  'PV501024'
+        1x  'PV501014'
+========================================================================
+ 3. IDENTIFICATION FIELD ANALYSIS
+========================================================================
+Total records            : 238
+Have 'Identification'    : 82
+Have 'Binomial'          : 57
+Have 'First Pass ID'     : 237
+No ID at all             : 1
+
+Seq. Status – Successful : 75
+Seq. Status – Failed     : 163
+
+Records importable (scientific_name derivable): 237 (99.6%)
+========================================================================
+ 4. EDIBILITY INFERENCE
+========================================================================
+The CSV contains no explicit edibility column. All records will be assigned the default value 'unknown' during import.
+Product Type distribution (Food vs. Medicinal/Tea) is available and could inform downstream classification.
+    216x  'Food'
+     22x  'Medicinal/Tea'
+========================================================================
+ 5. DUPLICATE DETECTION
+========================================================================
+Duplicate rows (same key fields) : 38
+Duplicate groups                 : 13
+========================================================================
+ 6. RECORDS THAT CANNOT BE IMPORTED
+========================================================================
+Records with no Identification, Binomial, OR First Pass ID: 1
+
+Sample Location values for unimportable records:
+  - 2024_02_5
+========================================================================
+ 7. SUMMARY & RECOMMENDATIONS
+========================================================================
+• At least one name field is available for the majority of records.
+• DNA sequencing ('Seq. Status') indicates ID reliability.
+• No explicit edibility data – use 'unknown' as default.
+• Check duplicate records before import to avoid redundancy.
+• Run cleanse_myco_data.py to generate a cleaned CSV ready for import.
